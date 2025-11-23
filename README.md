@@ -2,6 +2,8 @@
 A simple and efficient URL shortener similar to **Bit.ly**, built using **Node.js**, **Express**, **MongoDB**, and **EJS**.  
 Users can create short URLs, view stats, and manage links from a clean dashboard interface.
 
+- **My Project**: [Leanly](https://leanly-1xzc.onrender.com).
+
 ---
 
 ## 🚀 **Features**
