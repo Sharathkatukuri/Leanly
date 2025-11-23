@@ -5,7 +5,7 @@
       <p class="mb-0 pb-0">
         Use our URL shortener, QR Codes, and landing pages to engage your audience
         and connect them to the right information. Build, edit, and track
-        everything inside the Bitly Connections Platform.
+        everything inside the Leanly Connections Platform.
       </p>
       <div class="page">
         <div class="home-page-card">
@@ -41,7 +41,7 @@
         </div>
       </div>
     </div>
-    
+
     <% if (links.length===0) { %>
       <p class="text-muted text-center">No Links recorded yet.</p>
       <% } else { %>
@@ -73,7 +73,11 @@
                     <%= link.clicks %>
                   </td>
                   <td>
-                    <%= new Date(link.lastClicked).toLocaleString() %>
+                    <% if (!link.lastClicked) { %>
+                      <span class="text-muted">No clicks yet</span>
+                      <% } else { %>
+                        <%= new Date(link.lastClicked).toLocaleString() %>
+                          <% } %>
                   </td>
                   <td>
                     <form method="get" action="/code/<%= link.code %>">
