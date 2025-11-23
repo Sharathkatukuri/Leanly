@@ -1,0 +1,108 @@
+<% layout("/layouts/boilerplate") %>
+  <div class="row mt-3">
+    <div class="col-8 offset-2">
+      <h3 class="mb-4 mt-4">Build stronger digital connections</h3>
+      <p class="mb-0 pb-0">
+        Use our URL shortener, QR Codes, and landing pages to engage your audience
+        and connect them to the right information. Build, edit, and track
+        everything inside the Bitly Connections Platform.
+      </p>
+      <div class="page">
+        <div class="home-page-card">
+          <div class="tabs">
+            <button class="tab active">🔗 Short Link</button>
+          </div>
+          <h2>Shorten a long link</h2>
+          <p class="subtitle">No credit card required.</p>
+          <form method="POST" action="/api/links" id="create-link-form" novalidate class="needs-validation">
+            <div class="mb-3">
+              <label class="form-label" for="url">Paste your long link here</label>
+              <input name="url" id="url" type="url" placeholder="https://example.com/my-long-url" class="form-control"
+                required />
+              <div class="invalid-feedback">Please enter a valid URL</div>
+              <div class="valid-feedback">Looks good!</div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="code">Custom short code (optional)</label>
+              <input name="code" id="code" type="text" placeholder="e.g., docs123" pattern="[A-Za-z0-9]{6,8}"
+                class="form-control" />
+              <div class="invalid-feedback">
+                Code must be 6-8 characters, letters or numbers only.
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="title">Title (optional)</label>
+              <input name="title" id="title" type="text" placeholder="My website" class="form-control" />
+            </div>
+
+            <button class="submit-btn mt-3">Get your link for free →</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <% if (links.length===0) { %>
+      <p class="text-muted text-center">No Links recorded yet.</p>
+      <% } else { %>
+        <div class="table-responsive mt-3">
+          <table class="table table-bordered table-striped">
+            <thead class="table-light">
+              <tr>
+                <th>Short Code</th>
+                <th>Short URL</th>
+                <th>Long URL</th>
+                <th>Clicks</th>
+                <th>Last Clicked</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% links.forEach(link=> { %>
+                <tr>
+                  <td>
+                    <%= link.code %>
+                  </td>
+                  <td>
+                    <%= process.env.BASE_URL + '/' + link.code %>
+                  </td>
+                  <td class="text-break">
+                    <%= link.url %>
+                  </td>
+                  <td>
+                    <%= link.clicks %>
+                  </td>
+                  <td>
+                    <%= new Date(link.lastClicked).toLocaleString() %>
+                  </td>
+                  <td>
+                    <form method="get" action="/code/<%= link.code %>">
+                      <button class="submit-btn">View</button>
+                    </form>
+                    <form>
+                      <button class="submit-btn mt-1" onclick="deleteLink('<%= link.code %>')">Delete</button>
+                    </form>
+                  </td>
+                </tr>
+                <% }) %>
+            </tbody>
+          </table>
+        </div>
+        <% } %>
+  </div>
+
+  <script>
+    async function deleteLink(code) {
+      if (!confirm("Are you sure you want to delete this link?")) return;
+
+      const res = await fetch(`/api/links/${code}`, {
+        method: "DELETE"
+      });
+
+      if (res.ok) {
+        location.reload();
+      } else {
+        alert("Failed to delete the link");
+      }
+    }
+  </script>

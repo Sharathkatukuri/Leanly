@@ -1,0 +1,113 @@
+<% layout("/layouts/boilerplate") %>
+
+    <div class="container m-5 offset-2">
+        <div class="stats-page-card shadow p-4">
+            <h2 class="mb-4">Link Statistics</h2>
+
+            <div class="mb-3">
+                <label class="fw-bold">Short Code:</label>
+                <span class="text-primary">
+                    <%= link.code %>
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label class="fw-bold">Short URL:</label>
+                <div class="d-flex align-items-center gap-3">
+                    <a href="<%= process.env.BASE_URL + '/' + link.code %>" target="_blank"
+                        class="text-primary fw-semibold" style="text-decoration: underline; cursor: pointer;">
+                        <%= process.env.BASE_URL + '/' + link.code %>
+                    </a>
+                    <button class="btn btn-outline-secondary btn-sm"
+                        onclick="navigator.clipboard.writeText('<%= process.env.BASE_URL + '/' + link.code %>')">
+                        Copy
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="mb-3">
+                <label class="fw-bold">Original URL:</label><br>
+                <a href="<%= link.url %>" target="_blank" class="text-break" style="max-width: 100%;">
+                    <%= link.url %>
+                </a>
+            </div>
+
+            <% if (link.title) { %>
+                <div class="mb-3">
+                    <label class="fw-bold">Title:</label>
+                    <span>
+                        <%= link.title %>
+                    </span>
+                </div>
+                <% } %>
+
+                    <div class="mb-3">
+                        <label class="fw-bold">Last Clicked:</label>
+                        <% if (link.lastClicked==null) { %>
+                            <span class="text-muted">No clicks yet</span>
+                            <% } else { %>
+                                <span>
+                                    <%= new Date(link.lastClicked).toLocaleString() %>
+                                </span>
+                                <% } %>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="fw-bold">Total Clicks:</label>
+                        <span class="badge bg-success">
+                            <%= link.clicks %>
+                        </span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="fw-bold">Created At:</label>
+                        <span>
+                            <%= new Date(link.createdAt).toLocaleString() %>
+                        </span>
+                    </div>
+
+                    <hr>
+
+                    <h4 class="mt-4">Click History</h4>
+
+                    <% if (link.history.length===0) { %>
+                        <p class="text-muted">No clicks recorded yet.</p>
+                        <% } else { %>
+                            <div class="table-responsive mt-3">
+                                <table class="table table-bordered table-striped">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Timestamp</th>
+                                            <th>IP</th>
+                                            <th>User Agent</th>
+                                            <th>Referrer</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% link.history.forEach(item=> { %>
+                                            <tr>
+                                                <td>
+                                                    <%= new Date(item.ts).toLocaleString() %>
+                                                </td>
+                                                <td>
+                                                    <%= item.ip %>
+                                                </td>
+                                                <td class="text-break">
+                                                    <%= item.ua %>
+                                                </td>
+                                                <td>
+                                                    <%= item.referrer || "Direct" %>
+                                                </td>
+                                            </tr>
+                                            <% }) %>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <% } %>
+
+                                <a href="/" class="btn btn-primary mt-3">← Back to Dashboard</a>
+
+        </div>
+
+    </div>
